@@ -1,6 +1,13 @@
 <div class = "App">
-  <app-block [value] = firstValue [currency] = firstCurrency
-             [onChangeValue] = handleFirstValueChange [onCurrencyChange] = "handleFirstCurrencyChange"></app-block>
-  <app-block [value] = secondValue [currency] = secondCurrency
-             [onChangeValue] = handleSecondValueChange [onCurrencyChange] = "handleSecondCurrencyChange"></app-block>
+  <app-block
+    [currency] = "firstCurrency"
+    [onCurrencyChange] = "currencyService.handleFirstCurrencyChange.bind(currencyService,secondCurrency)"
+  >
+  </app-block>
+
+  <app-block
+    [currency] = "secondCurrency"
+    [onCurrencyChange] = "currencyService.handleSecondCurrencyChange.bind(currencyService,firstCurrency)"
+  >
+  </app-block>
 </div>

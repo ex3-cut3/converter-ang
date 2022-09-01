@@ -1,26 +1,32 @@
-import {Component, Input, OnInit} from '@angular/core';
-import {CurrencyService} from "../services/currency.service";
+import { Component, Input, OnInit } from '@angular/core';
+import { CurrencyService } from '../services/currency.service';
+import { Currency } from '../models/CurrencyModels';
 
 @Component({
   selector: 'app-block',
   templateUrl: './block.component.html',
-  styleUrls: ['./block.component.css']
+  styleUrls: ['./block.component.css'],
 })
-export class BlockComponent implements OnInit {
-  constructor(private currencyService: CurrencyService) {
-  }
+export class BlockComponent {
+  constructor(private currencyService: CurrencyService) {}
 
-  @Input() value = 0;
-  @Input() currency = '';
-  @Input() onChangeValue!: (value: number) => void;
-  @Input() onCurrencyChange!: (newCurrency: string) => void;
+  @Input() currency: Currency = {} as Currency;
+  @Input() onCurrencyChange!: (newCurrency: Currency) => void;
 
   defaultCurrencies = this.currencyService.defaultCurrencies;
 
-  ngOnInit(): void {
+  handleValueChange($event: Event) {
+    this.onCurrencyChange({
+      value: +($event.target as HTMLInputElement).value,
+      currency: this.currency.currency,
+    });
   }
 
-  handleValueChange($event: Event) {
-    this.onChangeValue(+($event.target as HTMLInputElement).value)
+  handleCurrencyStrChange(currencyStr: string) {
+    if (currencyStr === this.currency.currency) return;
+    this.onCurrencyChange({
+      currency: currencyStr,
+      value: this.currency.value,
+    });
   }
 }

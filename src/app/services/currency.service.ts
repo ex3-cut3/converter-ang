@@ -1,5 +1,6 @@
-import {Injectable} from '@angular/core';
-import {Subject} from "rxjs";
+import { Injectable } from '@angular/core';
+import { Subject } from "rxjs";
+import { Currency, CurrencySetter } from '../models/CurrencyModels';
 
 @Injectable({
   providedIn: 'root'
@@ -9,43 +10,38 @@ export class CurrencyService {
   constructor() {
   }
 
-  public readonly defaultCurrencies = ['UAH', 'USD', 'EUR', 'GBP'];
-  public firstCurrency = 'UAH';
-  public secondCurrency = 'USD';
-  public firstValue = 0;
-  public secondValue = 1;
+  public readonly defaultCurrencies = [ 'UAH', 'USD', 'EUR', 'GBP' ];
+  public firstCurrency: Currency = {value: 0, currency: 'UAH'};
+  public secondCurrency: Currency = {value: 1, currency: 'USD'};
   private listOfCurrency: { [currency: string]: number } = {};
 
-  firstCurrencyUpdatedSub = new Subject<string>();
-  secondCurrencyUpdatedSub = new Subject<string>();
-  secondValueUpdatedSub = new Subject<number>();
-  firstValueUpdatedSub = new Subject<number>();
+  secondCurrencyUpdatedSub = new Subject<Currency>();
+  firstCurrencyUpdatedSub = new Subject<Currency>();
 
-  setCurrencyList(listOfCurrency: { [p: string]: number }) {
+  setCurrencyList(listOfCurrency: { [curr: string]: number }) {
     this.listOfCurrency = listOfCurrency;
   }
 
-  setFirstValue(val: number){
-    this.firstValue = val;
-    this.firstValueUpdatedSub.next(val);
-  }
-
-  setSecondValue(val: number){
-    this.secondValue = val;
-    this.secondValueUpdatedSub.next(val);
-  }
-
-  setFirstCurrency(currency: string){
+  setFirstCurrency(currency: Currency) {
     this.firstCurrency = currency;
-    this.firstCurrencyUpdatedSub.next(currency);
+     this.firstCurrencyUpdatedSub.next(currency);
   }
 
-  setSecondCurrency(currency: string){
+  setSecondCurrency(currency: Currency) {
     this.secondCurrency = currency;
     this.secondCurrencyUpdatedSub.next(currency);
   }
 
-  getListOfCurrencies(){
+  getListOfCurrencies() {
     return this.listOfCurrency;
   }
+
+  handleValueChange(setterForChangedValue: CurrencySetter, setterToRecalculateValue: CurrencySetter, currencyToRecalculate: Currency, changedCurrency: Currency) {
+    const priceChange = changedCurrency.value / this.listOfCurrency[changedCurrency.currency];
+    setterToRecalculateValue.call(this, {...currencyToRecalculate, value: priceChange * this.listOfCurrency[currencyToRecalculate.currency]});
+    setterForChangedValue.call(this, {...changedCurrency,value: changedCurrency.value});
+  }
+
+  handleSecondCurrencyChange = this.handleValueChange.bind(this, this.setSecondCurrency, this.setFirstCurrency);
+  handleFirstCurrencyChange = this.handleValueChange.bind(this, this.setFirstCurrency, this.setSecondCurrency);
 }

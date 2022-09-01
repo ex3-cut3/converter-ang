@@ -15,7 +15,6 @@ export class APICurrencyService {
   fetchListOfCurrencies() {
     return this.http.get<any>(environment.APICurrencyURL).pipe(tap((data: { rates: { [currency: string]: number } }) => {
       this.currencyService.setCurrencyList(data.rates ? data.rates : {});
-      // console.log(this.currencyService.getListOfCurrencies())
     }));
   }
 }

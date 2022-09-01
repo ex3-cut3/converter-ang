@@ -1,7 +1,8 @@
 <div class="block">
   <ul class="currencies">
-    <li *ngFor="let curr of defaultCurrencies; let i = index" (click)="onCurrencyChange(curr)" [ngClass]="{'active':
-    curr === currency}">{{curr}}</li>
+    <li *ngFor="let curr of defaultCurrencies; let i = index" (click)="handleCurrencyStrChange(curr)" [ngClass]="{'active':
+    curr === currency.currency}">{{curr}}
+    </li>
     <li>
       <svg height="50px" viewBox="0 0 50 50" width="50px">
         <rect fill="none" height="50" width="50" />
@@ -9,6 +10,6 @@
       </svg>
     </li>
   </ul>
-  <input type="number" minlength="0" min="0" placeholder="Any number..." [value]="value.toFixed(4)"
+  <input type="number" minlength="0" min="0" placeholder="Any number" [value]="currency.value"
          (input)="handleValueChange($event)"/>
 </div>
