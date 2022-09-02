@@ -10,6 +10,6 @@
       </svg>
     </li>
   </ul>
-  <input type="number" minlength="0" min="0" placeholder="Any number" [value]="currency.value"
+  <input type="number" minlength="0" min="0" placeholder="Any number" [value]="(currency.value)"
          (input)="handleValueChange($event)"/>
 </div>

@@ -11,8 +11,8 @@ export class CurrencyService {
   }
 
   public readonly defaultCurrencies = [ 'UAH', 'USD', 'EUR', 'GBP' ];
-  public firstCurrency: Currency = {value: 0, currency: 'UAH'};
-  public secondCurrency: Currency = {value: 1, currency: 'USD'};
+  private firstCurrency: Currency = {value: 0, currency: 'UAH'};
+  private secondCurrency: Currency = {value: 1, currency: 'USD'};
   private listOfCurrency: { [currency: string]: number } = {};
 
   secondCurrencyUpdatedSub = new Subject<Currency>();
@@ -38,7 +38,8 @@ export class CurrencyService {
 
   handleValueChange(setterForChangedValue: CurrencySetter, setterToRecalculateValue: CurrencySetter, currencyToRecalculate: Currency, changedCurrency: Currency) {
     const priceChange = changedCurrency.value / this.listOfCurrency[changedCurrency.currency];
-    setterToRecalculateValue.call(this, {...currencyToRecalculate, value: priceChange * this.listOfCurrency[currencyToRecalculate.currency]});
+    const recalculatedValue = priceChange * this.listOfCurrency[currencyToRecalculate.currency];
+    setterToRecalculateValue.call(this, {...currencyToRecalculate, value: +recalculatedValue.toFixed(4)});
     setterForChangedValue.call(this, {...changedCurrency,value: changedCurrency.value});
   }
 

@@ -1,6 +1,6 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { CurrencyService } from '../services/currency.service';
-import { Currency } from '../models/CurrencyModels';
+import { Currency, CurrencySetter } from '../models/CurrencyModels';
 
 @Component({
   selector: 'app-block',
@@ -11,13 +11,13 @@ export class BlockComponent {
   constructor(private currencyService: CurrencyService) {}
 
   @Input() currency: Currency = {} as Currency;
-  @Input() onCurrencyChange!: (newCurrency: Currency) => void;
-
+  @Input() onCurrencyChange: CurrencySetter = ()=>{};
   defaultCurrencies = this.currencyService.defaultCurrencies;
 
   handleValueChange($event: Event) {
+    const enteredValue = +($event.target as HTMLInputElement).value;
     this.onCurrencyChange({
-      value: +($event.target as HTMLInputElement).value,
+      value: enteredValue,
       currency: this.currency.currency,
     });
   }
